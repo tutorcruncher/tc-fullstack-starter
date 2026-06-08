@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2022",
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "types": ["node", "jest", "@testing-library/jest-dom"]
+  },
+  "include": ["app/**/*.ts", "app/**/*.tsx", "tests/**/*.ts", "tests/**/*.tsx"]
+}

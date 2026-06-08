@@ -1,0 +1,3 @@
+npm run typecheck || exit 1
+npm test -- --passWithNoTests || exit 1
+npx lint-staged

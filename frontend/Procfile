@@ -1,0 +1,3 @@
+# Optional: convenience entry for PaaS hosts (e.g. Heroku) that read a Procfile.
+# The Dockerfile is the primary deployment artifact; this is here only as a fallback.
+web: npm run start

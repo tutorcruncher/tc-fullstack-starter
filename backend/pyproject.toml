@@ -1,0 +1,112 @@
+[project]
+name = "fastapi-sqlmodel-starter"
+version = "0.1.0"
+description = "Reusable FastAPI + SQLModel + Celery starter"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]==0.136.3",
+    "sqlmodel==0.0.38",
+    "uvicorn==0.40.0",
+    "gunicorn==23.0.0",
+    "pydantic==2.13.4",
+    "pydantic-settings==2.12.0",
+    "alembic==1.16.5",
+    "psycopg2-binary==2.9.10",
+    "python-multipart==0.0.20",
+    "python-dateutil==2.9.0.post0",
+    "python-dotenv==1.1.1",
+    "celery==5.6.3",
+    "redis==8.0.0",
+    "httpx==0.28.1",
+    "PyJWT[crypto]==2.10.1",
+    "pwdlib[argon2]==0.2.1",
+    "cryptography==46.0.3",
+    "logfire[celery,fastapi,requests,sqlalchemy]==4.16.0",
+    "sentry-sdk==2.42.0",
+    "scalar-fastapi==1.4.2",
+]
+
+[dependency-groups]
+dev = [
+    "ruff==0.15.15",
+    "ty==0.0.43",
+    "pytest==9.0.3",
+    "pytest-sugar==1.1.1",
+    "pytest-asyncio==1.3.0",
+    "pytest-cov==7.0.0",
+    "pytest-env==1.2.0",
+    "pytest-timeout==2.4.0",
+    "pytest-xdist==3.8.0",
+    "factory-boy==3.3.3",
+    "dirty-equals==0.10.0",
+    "coverage==7.13.0",
+    "pre-commit==4.4.0",
+]
+
+[tool.ruff]
+line-length = 120
+extend-exclude = ["scripts/local"]
+
+[tool.ruff.lint]
+extend-select = ["I"]
+ignore = ['E402']
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+known-first-party = ["app"]
+
+[tool.coverage.run]
+omit = [
+    "tests/*",
+    "migrations/*",
+    "scripts/*",
+]
+
+[tool.coverage.report]
+precision = 2
+exclude_lines = [
+    'pragma: no cover',
+    'def __repr__',
+    'def __str__',
+    'raise NotImplementedError',
+    'raise NotImplemented',
+    'if TYPE_CHECKING',
+    "if __name__ == '__main__':",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "-n auto --tb=native"
+timeout = 5
+env = [
+    "TZ=UTC",
+    "TESTING=True",
+    "SECRET_KEY=test-secret-key-not-for-production",
+    "DATABASE_URL=postgres://postgres:postgres@localhost:5432/starter_test",
+    "REDIS_URL=redis://localhost:6379/1",
+]
+filterwarnings = [
+    'error',
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+    "ignore::logfire._internal.config.LogfireNotConfiguredWarning",
+    "ignore:Call to deprecated setex:DeprecationWarning",
+    "ignore::starlette.exceptions.StarletteDeprecationWarning",
+    "ignore:Support for class-based `config` is deprecated*:DeprecationWarning",
+]
+
+[tool.alembic]
+script_location = "migrations"
+file_template = "%%(year)s%%(month).2d%%(day).2d%%(hour).2d%%(minute).2d_%%(rev)s"
+
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.ty.src]
+include = ["app/"]
+exclude = ["migrations/", "tests/", ".venv/", "__pycache__/", "scripts/local/"]
+
+[tool.ty.analysis]
+respect-type-ignore-comments = true

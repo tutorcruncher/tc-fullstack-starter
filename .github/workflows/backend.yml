@@ -1,0 +1,79 @@
+name: Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+    - 'backend/**'
+    - '.github/workflows/backend.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+    - 'backend/**'
+    - '.github/workflows/backend.yml'
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: starter_test
+        ports:
+        - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      redis:
+        image: redis:7
+        ports:
+        - 6379:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
+      DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/starter_test'
+      REDIS_URL: 'redis://localhost:6379/0'
+      TESTING: 'True'
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
+        # Need history back to the base branch so diff-cover can compute patch coverage
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        version: 'latest'
+
+    - name: Install dependencies
+      run: make install-dev
+
+    - name: Run database migrations
+      run: uv run alembic upgrade head
+
+    - name: Run linting
+      run: make lint
+
+    - name: Run type checking
+      run: make type-check
+
+    - name: Run tests with coverage
+      run: make test-cov
+
+    - name: Patch coverage report
+      if: github.event_name == 'pull_request'
+      run: uvx diff-cover coverage.xml --compare-branch=origin/${{ github.base_ref }} --fail-under=100

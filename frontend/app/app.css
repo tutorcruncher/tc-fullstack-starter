@@ -1,0 +1,283 @@
+@import 'tailwindcss';
+@import './prose.css';
+
+/* ============================================================================
+   Design tokens (Tailwind v4 @theme)
+
+   This is the single place to reskin the app. Every token below generates a
+   matching utility (e.g. --color-primary-500 -> bg-primary-500, text-primary-500)
+   and a CSS variable (var(--color-primary-500)). There is no tailwind.config.js.
+
+   Palette is a generic semantic set: primary (brand/action), secondary
+   (accent), neutral (greys), success / warning / error (status). Each scale
+   ships 50–900 plus convenience aliases (-soft, -dark) used by the primitives.
+   Swap the hex values to rebrand; keep the names so components keep working.
+   ============================================================================ */
+@theme {
+  /* ---- Fonts: system stack only, no brand fonts ---- */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* ---- Base colours ---- */
+  --color-white: #fff;
+  --color-black: #000;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-inherit: inherit;
+
+  /* ---- Primary (brand / primary action) ---- */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a;
+  --color-primary: var(--color-primary-600);
+  --color-primary-soft: var(--color-primary-50);
+  --color-primary-dark: var(--color-primary-700);
+
+  /* ---- Secondary (accent) ---- */
+  --color-secondary-50: #f5f3ff;
+  --color-secondary-100: #ede9fe;
+  --color-secondary-200: #ddd6fe;
+  --color-secondary-300: #c4b5fd;
+  --color-secondary-400: #a78bfa;
+  --color-secondary-500: #8b5cf6;
+  --color-secondary-600: #7c3aed;
+  --color-secondary-700: #6d28d9;
+  --color-secondary-800: #5b21b6;
+  --color-secondary-900: #4c1d95;
+  --color-secondary: var(--color-secondary-600);
+  --color-secondary-soft: var(--color-secondary-50);
+  --color-secondary-dark: var(--color-secondary-700);
+
+  /* ---- Neutral (greys / surfaces / text) ---- */
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+
+  /* ---- Success ---- */
+  --color-success-50: #ecfdf5;
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-success-700: #047857;
+  --color-success: var(--color-success-600);
+  --color-success-soft: var(--color-success-50);
+  --color-success-dark: var(--color-success-700);
+
+  /* ---- Warning ---- */
+  --color-warning-50: #fffbeb;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-warning-700: #b45309;
+  --color-warning: var(--color-warning-600);
+  --color-warning-soft: var(--color-warning-50);
+  --color-warning-dark: var(--color-warning-700);
+
+  /* ---- Error / danger ---- */
+  --color-error-50: #fef2f2;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-error-700: #b91c1c;
+  --color-error: var(--color-error-600);
+  --color-error-soft: var(--color-error-50);
+  --color-error-dark: var(--color-error-700);
+
+  /* ---- Spacing (extends Tailwind's default scale with named steps) ---- */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2.5rem;
+
+  /* ---- Radii ---- */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+
+  /* ---- Z-layer scale: reference these instead of magic z-index values ---- */
+  --z-dropdown: 30;
+  --z-sticky: 40;
+  --z-overlay: 50;
+  --z-toast: 60;
+
+  /* ---- Type scale ----
+     display 40 — hero
+     h1      30 — page title
+     h2      24 — section heading
+     h3      18 — subsection / card heading
+     body    14 — default body / form text
+     small   12 — captions, helper text
+  */
+  --text-display: 40px;
+  --text-display--line-height: 1.1;
+  --text-h1: 30px;
+  --text-h1--line-height: 1.15;
+  --text-h2: 24px;
+  --text-h2--line-height: 1.25;
+  --text-h3: 18px;
+  --text-h3--line-height: 1.35;
+  --text-body: 14px;
+  --text-body--line-height: 1.5;
+  --text-small: 12px;
+  --text-small--line-height: 1.4;
+}
+
+/* ============================================================================
+   Base layer — element defaults
+   ============================================================================ */
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  html,
+  body {
+    color: var(--color-neutral-900);
+    background-color: var(--color-neutral-50);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Default styling for native form controls. Text-like inputs only — checkboxes,
+     radios, ranges, files, and buttons keep their native rendering. */
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']):not(
+      [type='file']
+    ):not([type='submit']):not([type='button']):not([type='reset']):not([type='image']):not(
+      [type='hidden']
+    ),
+  textarea,
+  select {
+    @apply w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-neutral-900 outline-none transition;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply border-primary;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-neutral-400;
+  }
+
+  button:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+/* ============================================================================
+   Components layer — reusable composite utility classes
+   ============================================================================ */
+@layer components {
+  .container-app {
+    @apply mx-auto w-full max-w-[1280px] px-6 lg:px-8;
+  }
+  .container-narrow {
+    @apply mx-auto w-full max-w-[720px] px-6 lg:px-8;
+  }
+  .card-surface {
+    @apply rounded-lg border border-neutral-200 bg-white;
+  }
+  .label-field {
+    @apply mb-1.5 block text-neutral-700;
+  }
+}
+
+/* ============================================================================
+   Utilities layer — keyframes + animation helpers
+   ============================================================================ */
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .modal-backdrop-in {
+    animation: modalBackdropIn 200ms ease-out;
+  }
+  .modal-content-in {
+    animation: modalContentIn 220ms cubic-bezier(0.16, 1, 0.3, 1) 40ms backwards;
+  }
+  .toast-in {
+    animation: toastIn 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .animate-shake {
+    animation: shake 380ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes modalBackdropIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes modalContentIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes toastIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    20% {
+      transform: translateX(-6px);
+    }
+    40% {
+      transform: translateX(6px);
+    }
+    60% {
+      transform: translateX(-4px);
+    }
+    80% {
+      transform: translateX(4px);
+    }
+  }
+}

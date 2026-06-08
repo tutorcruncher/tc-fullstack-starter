@@ -1,0 +1,62 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Distribution / packaging
+build/
+dist/
+.eggs/
+*.egg/
+*.egg-info/
+pip-wheel-metadata/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+celerybeat-schedule
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+coverage.json
+
+# Type checking / linting caches
+.ruff_cache/
+.mypy_cache/
+
+# Databases
+*.sqlite3
+*.rdb
+*.dump
+*.dump.*
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+
+# MCP config
+.mcp.json
+
+# Claude Code (artifacts and local config only)
+.claude/logs/
+.claude/reviews/
+.claude/qa/
+.claude/settings.local.json
